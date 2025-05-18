@@ -1,5 +1,6 @@
 import { Header, Tabs } from "@/components/core";
-import { StatusBar } from "react-native";
+import { Slot } from "expo-router";
+import { StatusBar, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RootLayout() {
@@ -8,6 +9,10 @@ export default function RootLayout() {
       <StatusBar barStyle="light-content" />
       <Header />
       <Tabs />
+
+      <View className="flex-1 justify-center items-center">
+        <Slot />
+      </View>
     </SafeAreaView>
   );
 }
