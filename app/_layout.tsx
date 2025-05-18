@@ -1,12 +1,13 @@
-import { Text, View } from "react-native";
+import { Header, Tabs } from "@/components/core";
+import { StatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   return (
-    <View
-      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      className="bg-black"
-    >
-      <Text className="text-white">Root Layout</Text>
-    </View>
+    <SafeAreaView className="bg-black flex-1">
+      <StatusBar barStyle="light-content" />
+      <Header />
+      <Tabs />
+    </SafeAreaView>
   );
 }
