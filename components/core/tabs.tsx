@@ -1,21 +1,18 @@
-import { usePathname } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface Props {
   index: number;
-  setIndex: (index: number) => void;
+  setIndex: (i: number) => void;
 }
 
 export const Tabs = ({ index, setIndex }: Props) => {
-  const pathname = usePathname();
-
   return (
-    <View className="flex flex-row items-center justify-center gap-5 pt-4 ">
+    <View className="flex flex-row items-center justify-center gap-5 pt-4">
       <TouchableOpacity onPress={() => setIndex(0)}>
         <Text
           className={`font-semibold text-base ${
-            pathname === "/" ? "text-white" : "text-gray-500"
+            index === 0 ? "text-white" : "text-gray-500"
           }`}
         >
           Today&apos;s Outfit
@@ -25,7 +22,7 @@ export const Tabs = ({ index, setIndex }: Props) => {
       <TouchableOpacity onPress={() => setIndex(1)}>
         <Text
           className={`font-semibold text-base ${
-            pathname === "/closet" ? "text-white" : "text-gray-500"
+            index === 1 ? "text-white" : "text-gray-500"
           }`}
         >
           Closet
