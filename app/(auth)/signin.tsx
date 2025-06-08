@@ -52,7 +52,7 @@ export default function SignIn() {
       >
         <View className="flex-1 h-full w-full px-5 mb-20 justify-center items-center space-y-5">
           <Text className="text-white text-center font-bold text-2xl">
-            {t("WELCOME")}
+            {t("WELCOME_BACK")}
           </Text>
 
           <DefaultInput
