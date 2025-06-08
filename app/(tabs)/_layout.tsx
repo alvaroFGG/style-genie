@@ -58,7 +58,9 @@ export default function TabsLayout() {
   return (
     <SafeAreaView className="h-screen bg-black">
       <StatusBar barStyle="light-content" />
-      <Header />
+
+      <Header showAvatar />
+
       <Tabs index={index} setIndex={setIndex} />
 
       <TabView

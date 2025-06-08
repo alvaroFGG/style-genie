@@ -2,7 +2,11 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Avatar } from "./avatar";
 
-export const Header = () => {
+interface Props {
+  showAvatar?: boolean;
+}
+
+export const Header = ({ showAvatar }: Props) => {
   return (
     <View className="flex flex-row items-center justify-between">
       <View />
@@ -11,7 +15,7 @@ export const Header = () => {
         StyleGenie
       </Text>
 
-      <Avatar />
+      {showAvatar ? <Avatar /> : <View />}
     </View>
   );
 };
