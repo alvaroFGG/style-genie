@@ -21,6 +21,8 @@ export default function SignUp() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
 
   const signUpWithEmail = async () => {
@@ -31,6 +33,12 @@ export default function SignUp() {
     } = await supabase.auth.signUp({
       email: email,
       password: password,
+      options: {
+        data: {
+          full_name: fullName,
+          username: username,
+        },
+      },
     });
 
     if (error) Alert.alert(error.message);
@@ -52,9 +60,19 @@ export default function SignUp() {
             {t("WELCOME")}
           </Text>
 
-          <DefaultInput placeholder={t("COMPLETE_NAME")} />
+          <DefaultInput
+            placeholder={t("COMPLETE_NAME")}
+            onChangeText={(value) => {
+              setFullName(value);
+            }}
+          />
 
-          <DefaultInput placeholder={t("USERNAME")} />
+          <DefaultInput
+            placeholder={t("USERNAME")}
+            onChangeText={(value) => {
+              setUsername(value);
+            }}
+          />
 
           <DefaultInput
             placeholder={t("EMAIL")}

@@ -25,8 +25,6 @@ export default function AuthProvider(props: Props) {
     async function fetchSession() {
       const { error, data } = await supabase.auth.getSession();
 
-      console.log(data, error);
-
       if (error) {
         throw error;
       }
