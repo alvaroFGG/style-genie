@@ -29,7 +29,9 @@ export default function ClosetProvider(props: Props) {
 
   const fetchCloset = async () => {
     if (!session) return;
+
     setLoading(true);
+
     const { data, error } = await supabase
       .from("closets")
       .select("*, closet_items(*)")
@@ -49,6 +51,8 @@ export default function ClosetProvider(props: Props) {
   };
 
   const uploadImageAndUpdateCloset = async (image: ImagePickerAsset) => {
+    setLoading(true);
+
     const base64 = await FileSystem.readAsStringAsync(image.uri, {
       encoding: FileSystem.EncodingType.Base64,
     });
@@ -63,6 +67,7 @@ export default function ClosetProvider(props: Props) {
 
     if (uploadedImg.error) {
       console.error("Error uploading image:", uploadedImg.error);
+      setLoading(false);
       return;
     }
 
@@ -79,10 +84,12 @@ export default function ClosetProvider(props: Props) {
 
     if (error) {
       console.error("Error uploading image and updating closet:", error);
+      setLoading(false);
       return;
     }
 
-    fetchCloset(); // Refresh the closet data after upload
+    await fetchCloset();
+    setLoading(false);
   };
 
   useEffect(() => {

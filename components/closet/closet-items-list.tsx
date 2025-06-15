@@ -1,59 +1,61 @@
+import { useCloset } from "@/providers/ClosetProvider";
 import { ClosetItem } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import React from "react";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, FlatList, Image, TouchableOpacity, View } from "react-native";
 
 interface Props {
   closetItems: ClosetItem[];
 }
 
 export const ClosetItemsList = ({ closetItems }: Props) => {
+  const { uploadImageAndUpdateCloset } = useCloset();
+
+  const takePhoto = async () => {
+    // Solicitar permisos
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert(
+        "Permiso denegado",
+        "Se necesita permiso para acceder a la cámara"
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+    });
+
+    if (!result.canceled) {
+      await uploadImageAndUpdateCloset(result.assets[0]);
+    }
+  };
+
   return (
     <View className="flex-1 mt-5">
-      <ScrollView>
-        {closetItems.map((item) => (
+      <FlatList
+        data={closetItems}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
+        renderItem={({ item }) => (
           <Image
-            key={item.id}
             source={{ uri: item.image_url }}
-            style={styles.image}
+            className="w-[48%] h-[270px] rounded-lg m-1"
           />
-        ))}
-      </ScrollView>
+        )}
+      />
 
-      <TouchableOpacity style={styles.fab}>
+      <TouchableOpacity
+        className="absolute bottom-10 right-5 w-[70px] h-[70px] bg-white rounded-full border border-gray-300 items-center justify-center"
+        onPress={async () => {
+          await takePhoto();
+        }}
+      >
         <Ionicons name="camera" size={30} color="black" />
       </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    marginTop: 20,
-  },
-  image: {
-    marginTop: 20,
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-  },
-  fab: {
-    borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    width: 70,
-    position: "absolute",
-    bottom: 40,
-    right: 30,
-    height: 70,
-    backgroundColor: "white",
-    borderRadius: 100,
-  },
-});
