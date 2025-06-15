@@ -1,10 +1,15 @@
 // CameraButton.tsx
+import { useAuth } from "@/providers/AuthProvider";
+import { supabase } from "@/supabase";
 import { useLanguage } from "@/text/languaje-context";
+import { decode } from "base64-arraybuffer";
+import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export const CameraButton = () => {
+  const { session } = useAuth();
   const { t } = useLanguage();
 
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -22,11 +27,28 @@ export const CameraButton = () => {
     }
 
     const result = await ImagePicker.launchCameraAsync({
-      quality: 0.7,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
     });
 
     if (!result.canceled) {
+      // Si el usuario no cancela, establecer la URI de la imagen
       setImageUri(result.assets[0].uri);
+      const img = result.assets[0];
+      const base64 = await FileSystem.readAsStringAsync(img.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      console.log(session?.user.id);
+
+      const filePath = `${session?.user.id}/${new Date().getTime()}.png`;
+
+      const storageRes = await supabase.storage
+        .from("clothes")
+        .upload(filePath, decode(base64), {
+          contentType: "image/png",
+        });
+
+      console.log(storageRes);
     }
   };
 
