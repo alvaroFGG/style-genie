@@ -1,18 +1,12 @@
-// CameraButton.tsx
-import { useAuth } from "@/providers/AuthProvider";
-import { supabase } from "@/supabase";
+import { useCloset } from "@/providers/ClosetProvider";
 import { useLanguage } from "@/text/languaje-context";
-import { decode } from "base64-arraybuffer";
-import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
-import React, { useState } from "react";
-import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Alert, Pressable, Text, View } from "react-native";
 
 export const CameraButton = () => {
-  const { session } = useAuth();
+  const { uploadImageAndUpdateCloset } = useCloset();
   const { t } = useLanguage();
-
-  const [imageUri, setImageUri] = useState<string | null>(null);
 
   const takePhoto = async () => {
     // Solicitar permisos
@@ -32,23 +26,7 @@ export const CameraButton = () => {
     });
 
     if (!result.canceled) {
-      // Si el usuario no cancela, establecer la URI de la imagen
-      setImageUri(result.assets[0].uri);
-      const img = result.assets[0];
-      const base64 = await FileSystem.readAsStringAsync(img.uri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      console.log(session?.user.id);
-
-      const filePath = `${session?.user.id}/${new Date().getTime()}.png`;
-
-      const storageRes = await supabase.storage
-        .from("clothes")
-        .upload(filePath, decode(base64), {
-          contentType: "image/png",
-        });
-
-      console.log(storageRes);
+      await uploadImageAndUpdateCloset(result.assets[0]);
     }
   };
 
@@ -62,20 +40,6 @@ export const CameraButton = () => {
           {t("ADD_ITEMS_NOW")}
         </Text>
       </Pressable>
-      {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    marginTop: 20,
-  },
-  image: {
-    marginTop: 20,
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-  },
-});

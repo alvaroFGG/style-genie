@@ -1,5 +1,6 @@
 // app/(tabs)/_layout.tsx
 import { Header, Tabs } from "@/components/core";
+import ClosetProvider from "@/providers/ClosetProvider";
 import { Slot, usePathname, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { StatusBar, useWindowDimensions } from "react-native";
@@ -81,7 +82,9 @@ export default function TabsLayout() {
               }
               style={{ flex: 1 }}
             >
-              <Slot />
+              <ClosetProvider>
+                <Slot />
+              </ClosetProvider>
             </Animated.View>
           ) : null
         }
