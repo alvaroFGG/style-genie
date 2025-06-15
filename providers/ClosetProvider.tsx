@@ -61,10 +61,19 @@ export default function ClosetProvider(props: Props) {
         contentType: "image/png",
       });
 
+    if (uploadedImg.error) {
+      console.error("Error uploading image:", uploadedImg.error);
+      return;
+    }
+
+    const { data } = supabase.storage
+      .from("clothes")
+      .getPublicUrl(uploadedImg.data.path);
+
     const { error } = await supabase.from("closet_items").insert({
       name: image.fileName || "New Item",
-      category: "Uncategorized", // Default category, can be changed later
-      image_url: uploadedImg.data?.path || "",
+      category: "Uncategorized",
+      image_url: data.publicUrl,
       closet_id: closet?.id,
     });
 

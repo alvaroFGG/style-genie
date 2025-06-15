@@ -7,8 +7,8 @@ export const NoItemsWithButton = () => {
   const { t } = useLanguage();
 
   return (
-    <View className="w-full max-w-[340px] items-center">
-      <Text className="text-white text-center text-xs mb-2.5">
+    <View className="flex w-full h-full justify-center items-center mx-auto">
+      <Text className="text-white text-center text-sm mb-2.5 max-w-[300px]">
         {t("CLOSET_EMPTY")}
       </Text>
 
